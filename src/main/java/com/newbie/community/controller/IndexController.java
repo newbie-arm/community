@@ -19,7 +19,6 @@ public class IndexController {
     public String index(HttpServletRequest request){
 
         Cookie[] cookies = request.getCookies();
-
         /*
         当访问首页的时候，循环所有cookie
         找到 token ， 去数据库里面查，是否有这条记录
