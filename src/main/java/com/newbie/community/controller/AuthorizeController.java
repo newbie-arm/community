@@ -2,7 +2,6 @@ package com.newbie.community.controller;
 
 import com.newbie.community.dto.AccessTokenDto;
 import com.newbie.community.dto.GithubUser;
-import com.newbie.community.mapper.UserMapper;
 import com.newbie.community.model.User;
 import com.newbie.community.provider.GithubProvider;
 import com.newbie.community.service.impl.UserServiceImpl;
@@ -12,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
@@ -37,7 +38,8 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callBack(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletRequest request) {
+                           HttpServletRequest request,
+                           HttpServletResponse response) {
 
         AccessTokenDto accessTokenDto = new AccessTokenDto();
         accessTokenDto.setCode(code);
@@ -56,7 +58,8 @@ public class AuthorizeController {
          */
         if (githubUser!= null) {
             User user = new User();
-            user.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);  // 利用token绑定前端和后端登陆状态
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
@@ -64,8 +67,11 @@ public class AuthorizeController {
             System.out.println(user);
             userService.addUser(user);
 
-            HttpSession session = request.getSession();
-            session.setAttribute("user", githubUser);
+            /*
+            当github登录成功之后，获取用户信息在生成一个token 存入对象 写入数据库
+            并且把token放在cookie里面
+             */
+            response.addCookie(new Cookie("token", token));
         }
         return "redirect:/";
     }
