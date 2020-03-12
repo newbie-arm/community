@@ -50,10 +50,8 @@ public class AuthorizeController {
         if (user!= null) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            return "redirect:/";
-        }else{
-            return "redirect:/";
         }
+        return "redirect:/";
     }
 }
 
