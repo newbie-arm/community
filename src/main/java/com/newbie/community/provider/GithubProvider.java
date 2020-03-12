@@ -27,9 +27,9 @@ public class GithubProvider {
             // 需要截取 =  和 & 中间的 token
             String[] split = str.split("&");
             String[] tokenSplit = split[0].split("=");
-            String token = tokenSplit[1];
-            System.out.println(token);
-            return token;
+
+            return tokenSplit[1];
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,6 +47,7 @@ public class GithubProvider {
             String str = response.body().string();
             GithubUser githubUser = JSON.parseObject(str, GithubUser.class);
             return githubUser;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
