@@ -10,8 +10,6 @@ public interface UserService {
 
     /**
      * 用token查找用户
-     * @param token
-     * @return
      */
     User findByToken(String token);
 }
