@@ -56,7 +56,7 @@ public class AuthorizeController {
             登陆成功，写cookie和session
             失败，重新登陆
          */
-        if (githubUser!= null) {
+        if (githubUser!= null && githubUser.getId() != null) {
             User user = new User();
             String token = UUID.randomUUID().toString();
             user.setToken(token);  // 利用token绑定前端和后端登陆状态
